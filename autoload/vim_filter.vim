@@ -15,11 +15,11 @@ endfunction
 
 function! vim_filter#FilterRemove(num)
     if exists('t:filter')
-        let cw = expand('<cword>')
+        let l:cw = expand('<cword>')
         exec bufwinnr(join(t:filter, '\|')) . 'winc q'
         if a:num != ''
             call remove(t:filter, a:num)
-        elseif
+        else
             call filter(t:filter, 'v:val != "' . cw . '"')
         endif
     endif
@@ -28,12 +28,14 @@ endfunction
 
 function! s:Filter()
     let @a=''
-    let desc = join(t:filter, '\|')
-    execute 'g/'.join(t:filter, '\|').'/y A'
-    execute "normal \<c-o>"
-    new
-    exec "file ".desc
-    setlocal bt=nofile
-    setlocal nobuflisted
-    put! a
+    if !empty(t:filter)
+        let desc = join(t:filter, '\|')
+        execute 'g/'.join(t:filter, '\|').'/y A'
+        execute "normal \<c-o>"
+        new
+        exec "file ".desc
+        setlocal bt=nofile
+        setlocal nobuflisted
+        put! a
+    endif
 endfunction
